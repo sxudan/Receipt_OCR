@@ -95,7 +95,7 @@ function send(res, data) {
   })
 }
 
-app.post('/getAmount', upload ,function(req,res){  
+app.post('/getInfo', upload ,function(req,res){  
   
   if (req.body.mimetype == 'image/jpeg' || req.body.mimetype == 'image/png') {
     console.log(req.body.filepath)

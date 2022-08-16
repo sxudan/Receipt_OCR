@@ -36,8 +36,7 @@ class ImageTextParser {
 
     #extractCompanyName() {
         const str = (this.imageRawText.match(this.regexPatterns.company_name) ?? []) [0]
-        console.log("companu name", str)
-        return {companyName: str}
+        return {ocr_companyName: str}
     }
 
     #extractKeyValue() {
@@ -132,7 +131,7 @@ class ImageTextParser {
         const keyval = this.#extractKeyValue()
         const companyName = this.#extractCompanyName()
         // return  {...priceInfo, date: this.#extractDate()}       
-        return  {...priceInfo, ...keyval, ...companyName}       
+        return  {...priceInfo, ocr_dict: keyval, ...companyName}       
     }
 }
 
