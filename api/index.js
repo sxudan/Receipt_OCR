@@ -1,4 +1,5 @@
 const tesseract = require("node-tesseract-ocr")
+const https = require("https");
 // const { createWorker, PSM, OEM } = require('tesseract.js');
 const express = require('express')
 const PDFExtract = require('pdf.js-extract').PDFExtract;
@@ -32,6 +33,11 @@ const app = express()
 
 const fs = require('fs');
 const port = 3000
+
+const httpsconfig = {
+  key: fs.readFileSync("server.key"),
+  cert: fs.readFileSync("server.cert"),
+};
 
 const destFolder = './uploads'
 
@@ -136,7 +142,11 @@ app.get('/', (req, res) => {
   res.sendFile('./web/index.html', {root: __dirname + "/../" })
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`)
+// })
 
+https.createServer(httpsconfig, app)
+.listen(port, function (req, res) {
+  console.log("Server started at port 3000");
+});
