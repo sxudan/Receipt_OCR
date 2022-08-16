@@ -46,7 +46,7 @@ class ImageTextParser {
         var obj = {}
         arr.forEach((x) => {
             if((x.match(/:/g) || []).length > 1) {
-                const s = (x.match(this.regexPatterns.key_number) ?? [])
+                const s = (x.match(this.regexPatterns.key_number) || [])
                 if(s.length > 0) {
                     s.forEach((y) => {
                         pairs.push(y)
@@ -70,13 +70,13 @@ class ImageTextParser {
     }
 
     #extractPrice() { // Net Pay: $1,200.00
-        const str = (this.imageRawText.match(this.regexPatterns.netpay) ?? [])[0]
+        const str = (this.imageRawText.match(this.regexPatterns.netpay) || [])[0]
         var amount = 0
         var currency = ""
         var tax = 0
         if(str) {
             console.log("extracting from " + str)
-            const priceStringReg = (str.replaceAll(" ", "").match(this.regexPatterns.pricewithcurrency) ?? [])[0]
+            const priceStringReg = (str.replaceAll(" ", "").match(this.regexPatterns.pricewithcurrency) || [])[0]
             currency = (str.match(this.regexPatterns.currency) ?? [])[0]
             if(currency == null || currency == undefined) {
                 currency = ""

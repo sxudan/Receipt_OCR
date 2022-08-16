@@ -5,7 +5,7 @@ class PDFTextParser {
 
     getContent() {
         if(this.pdfJson) {
-            const pages = this.pdfJson.pages ?? []
+            const pages = this.pdfJson.pages || []
             if (pages[0]) {
                 const content = pages[0].content
                 return content
@@ -114,7 +114,7 @@ class PDFTextParser {
         })
         content.forEach((data) => {
             if(netPayInfo && netPayInfo.str != data.str && netPayInfo.y == data.y && data.x > netPayInfo.x && data.str.trim() != "") {
-                const priceMatch = data.str.match(/(?=\w)[\d.,]+\d\b/gi) ?? []
+                const priceMatch = data.str.match(/(?=\w)[\d.,]+\d\b/gi) || []
                 if(priceMatch.length == 0) {
                     netPayAmount = 0
                 } else {
