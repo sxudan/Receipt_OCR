@@ -1,0 +1,13 @@
+<form action="http://192.168.1.205:3000/getAmount" enctype="multipart/form-data" method="post">
+    <div class="form-group">
+      <input type="file" class="form-control-file" name="datafile">
+      <div>
+        <select name="actiontype">
+            <option value="0">Income</option>
+            <option value="1">Expense</option>
+        </select>
+      </div>
+      
+      <input type="submit" value="Get me the stats!" class="btn btn-default">            
+    </div>
+  </form>
