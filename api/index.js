@@ -10,29 +10,18 @@ const ImageTextParser = require('./ImageTextParser')
 var multer  =   require('multer'); 
 const path = require('path');
 var Jimp = require('jimp'); 
+const app = express()
+const fs = require('fs');
+const ApiToken = require("./middlewares/apitoken");
 
-// const worker = createWorker({
-//   logger: m => console.log(m)
-// });
-
-const Actions = {
-  INCOME: 0,
-  EXPENSE: 1
-}
+const httpPort = 80
+const httpsPort = 443
 
 const config = {
   lang: "eng",
   oem: 1,
-  psm: 6,
-  env: {
-    maxBuffer: 10240 * 10240
-  }
+  psm: 6
 }
-
-const app = express()
-
-const fs = require('fs');
-const port = 3000
 
 const httpsconfig = {
   key: fs.readFileSync("server.key"),
@@ -40,6 +29,8 @@ const httpsconfig = {
 };
 
 const destFolder = './uploads'
+
+app.use('/getInfo', ApiToken)
 
 var storage =   multer.diskStorage({  
   destination: function (req, file, callback) {  
@@ -58,26 +49,6 @@ const rectangle = { left: 0, top: 0, width: 500, height: 500 };
 
 async function runTesseract(path) {
   return new Promise((resolve, reject) => {
-
-
-    // (async () => {
-    //   await worker.load();
-    //   await worker.loadLanguage('eng');
-    //   await worker.initialize('eng');
-    //   await worker.setParameters({
-    //     tessedit_pageseg_mode: PSM.SINGLE_BLOCK,
-    //     tessedit_ocr_engine_mode: OEM.TESSERACT_LSTM_COMBINED
-    //   });
-    //   // const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
-    //   const obj = await worker.recognize(path);
-    //   const text = obj.data.text
-    //   console.log(obj)
-    //   console.log(text)
-    //   const imageText = new ImageTextParser(text)
-    //   resolve(imageText)
-    //   await worker.terminate();
-    // })();
-
     tesseract
     .recognize(path, config)
     .then((text) => {
@@ -110,7 +81,7 @@ app.post('/getInfo', upload ,function(req,res){
       if (err) throw err;
       lenna
         .greyscale() // set greyscale
-        .contrast(+0.5)
+        .contrast(0)
         .write(outputFile); // save
         fs.unlinkSync(req.body.filepath)
         runTesseract(outputFile).then((parser) => {
@@ -137,16 +108,18 @@ app.post('/getInfo', upload ,function(req,res){
   } 
 });  
 
+app.use(express.static(path.join(__dirname, '../receiptocr_web/build')));
+
 app.get('/', (req, res) => {
-  console.log({root: __dirname })
-  res.sendFile('./web/index.html', {root: __dirname + "/../" })
+  res.sendFile(path.join(__dirname, '../receiptocr_web/build', 'index.html'))
 })
 
-// app.listen(port, () => {
-//   console.log(`Example app listening on port ${port}`)
-// })
+// https.createServer(httpsconfig, app)
+// .listen(httpsPort, function (req, res) {
+//   console.log("Server started at port " + httpsPort);
+// });
 
-https.createServer(httpsconfig, app)
-.listen(port, function (req, res) {
-  console.log("Server started at port 3000");
+app
+.listen(httpPort, function (req, res) {
+  console.log("Server started at port "+ httpPort);
 });
