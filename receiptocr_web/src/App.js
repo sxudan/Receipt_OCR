@@ -125,7 +125,8 @@ function App() {
       
       
       axios.post(
-        "http://192.168.1.205/getInfo",
+        "http://ec2-18-116-204-238.us-east-2.compute.amazonaws.com/getInfo",
+        // "http://192.168.1.205/getInfo",
         formData,
         {
           headers: {
