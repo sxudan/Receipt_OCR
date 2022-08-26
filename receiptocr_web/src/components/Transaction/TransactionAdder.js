@@ -139,7 +139,7 @@ function TransactionAdder(props) {
                         
                         <Row className="form-field">
                         <p className="label">Amount</p>
-                        <input type="number" defaultValue={data.amount} value={data.amount} onChange={(e) => {
+                        <input type="number" value={data.amount} onChange={(e) => {
                             // amount = Math.abs(parseInt(e.target.value))\
                             setData(
                                 (prevData) => {
