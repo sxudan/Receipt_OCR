@@ -1,19 +1,24 @@
 .popup {
     background-color: white;
-    position: fixed;
+    position: absolute;
     height: 100vh;
     width: 100%;
     left: 0;
     top: 0;
-    padding: 10%;
+    padding: 5%;
 }
 .content {
     position: relative;
-    width: 50%;
+    width: 40%;
     margin: auto;
 }
 
 
 .form-field {
     padding: 20px;
+}
+
+.form-field .label {
+    text-align: left;
+    font-weight: 600;
 }

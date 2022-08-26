@@ -30,7 +30,18 @@ const httpsconfig = {
 
 const destFolder = './uploads'
 
-app.use('/getInfo', ApiToken)
+
+// Add headers before the routes are defined
+app.use(function (req, res, next) {
+  
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+  next();
+});
+
+// app.use('/getInfo', ApiToken)
 
 var storage =   multer.diskStorage({  
   destination: function (req, file, callback) {  
@@ -80,19 +91,19 @@ app.post('/getInfo', upload ,function(req,res){
     Jimp.read(req.body.filepath, (err, lenna) => {
       if (err) throw err;
       lenna
-        .greyscale() // set greyscale
-        .contrast(0)
-        .write(outputFile); // save
-        fs.unlinkSync(req.body.filepath)
-        runTesseract(outputFile).then((parser) => {
-          const paymentInfo = parser.getPaymentInfo()
-          send(res, paymentInfo)
-          // res.send(parser)
-        })
-        .catch((error) => {
-          console.log(error.message)
-          send(res, {"message": error.message})
-        })
+      .greyscale() // set greyscale
+      .contrast(0)
+      .write(outputFile); // save
+      fs.unlinkSync(req.body.filepath)
+      runTesseract(outputFile).then((parser) => {
+        const paymentInfo = parser.getPaymentInfo()
+        send(res, paymentInfo)
+        // res.send(parser)
+      })
+      .catch((error) => {
+        console.log(error.message)
+        send(res, {"message": error.message})
+      })
     });
   } else if (req.body.mimetype == 'application/pdf') {
     pdfExtract.extract(req.body.filepath, options, (err, data) => {
