@@ -151,7 +151,7 @@ function App() {
     function addFile(e) {
       var input = document.createElement('input');
       input.type = 'file';
-      input.id = 'dataFile'
+      input.name = 'datafile'
       input.accept = "image/*,application/pdf"
       input.style = "display: none"
       document.body.appendChild(input);
