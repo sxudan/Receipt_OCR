@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 import TransactionAdder from './components/Transaction/TransactionAdder';
 import Transaction from './components/Transaction/Transaction';
 import LoadingBar from './components/LoadingBar';
-import GoogleLogin, { GoogleLogout } from 'react-google-login';
 import Tags from './components/Tags/Tags';
 import {dbRef, auth} from './firebase'
 import {get, child, remove} from 'firebase/database'
