@@ -1,0 +1,46 @@
+.menu {
+    position: relative;
+}
+.menu-button {
+    position: relative;
+    width: 25px;
+    min-width: 25px;
+    height: 25px;
+    display: block;
+    background-color: #eee;
+    cursor: pointer;
+    user-select: none;
+}
+
+.menu-button:hover {
+    background-color: #ddd;
+}
+
+.menu-items-wrapper {
+    position: absolute;
+    top: 30px;
+    width: 100px;
+    list-style-type: none;
+    border: 1px solid #ddd;
+    padding: 0;
+    z-index: 999;
+    background-color: white;
+}
+
+.menu-item {
+    height: 30px;
+    line-height: 30px;
+    text-align: left;
+    padding: 0 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.menu-item:hover {
+    background-color: #eee;
+}
+
+hr {
+    margin: 0;
+    padding: 0;
+}

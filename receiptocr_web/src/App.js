@@ -66,13 +66,17 @@ function App() {
   function removeTransaction(x) {
     setLoading(true)
     removeImage(x.filename).then(() => {
+      console.log("deleted image")
+    }).catch(err => {
+      console.log(err)
+      // setLoading(false)
+    }).finally(() => {
       console.log("removing transaction", x.id)
       remove(child(dbRef, `Receipts/${profile.uid}/transactions/${x.id}`)).then(() => {
         getTransactions()
-      }).catch((err) => console.log(err))
-    }).catch(err => {
-      console.log(err)
-      setLoading(false)
+      }).catch((err) => {
+        alert(err)
+      })
     })
   }
   
@@ -123,7 +127,7 @@ function App() {
       // the image field name should be similar to your api endpoint field name
       // in my case here the field name is customFile
       
-      
+      console.log("calling api url " + process.env.REACT_APP_OCR_ENDPOINT + "getInfo")
       axios.post(
         process.env.REACT_APP_OCR_ENDPOINT + "getInfo",
         formData,
@@ -161,10 +165,12 @@ function App() {
         const c = window.confirm("Do you want to use OCR tool?")
         if(c) {
           fetchOCRInfo(file).then((data) => {
+            if(!data.data.ocr_success) alert("Failed to capture text!")
             setIsTransactionAdder(true)
             setOcrData(data)
           }).catch(err => {
             console.log(err)
+            alert(err)
             setIsTransactionAdder(true)
           })
         } else {

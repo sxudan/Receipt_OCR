@@ -6,12 +6,18 @@ import Container from 'react-bootstrap/Container';
 import { useEffect, useState } from 'react';
 import Tags from '../Tags/Tags';
 import Button from 'react-bootstrap/esm/Button';
+import Dropdown from 'react-bootstrap/Dropdown';
+import Menu from '../Menu/Menu';
 
 
 
 function Transaction(props) {
   
   const [data, setData] = useState({})
+  const [interrupt, setInterrupt] = useState(Math.random())
+  window.document.body.onclick = (e) => {
+    setInterrupt(Math.random())
+  }
   
   useEffect(() => {
     if(props.data) {
@@ -49,19 +55,29 @@ function Transaction(props) {
               return (
                 <ListGroup.Item key={i}>
                 <Row>
-                <Col sm={8}>
+                <Col xxl={8} sm={9} xs={9}>
                 <Row><h6>{x.category}</h6></Row>
                 <Row><p>{x.date}</p></Row>
                 </Col>
-                <Col sm={3} style={{color: x.type === "income" ? "green" : "red"}}><p>{x.currency + x.amount}</p></Col>
-                <Col sm={1}>
-                <Tags onClick={() => {
+                <Col xxl={3} sm={3} xs={3} style={{color: x.type === "income" ? "green" : "red"}}><p>{x.currency + x.amount}</p></Col>
+                <Col xxl={1} sm={1} xs={12} >
+                <Row><Menu interrupt={interrupt} items={["View", "Delete"]} onSelected={(value,i) => {
+                  switch(i) {
+                    case 0:
+                    window.open(x.image)
+                    break;
+                    case 1:
+                    if(window.confirm("Delete this receipt?")) props.onDelete(x)
+                    break;
+                  }
+                }}/></Row>
+                {/* <Tags onClick={() => {
                   window.open(x.image)
-                }} color="white" bgColor="red" text={x.image.includes("pdf")? "pdf": "image"}/>
-                <Tags onClick={(e) => {
+                }} color="white" bgColor="green" text={x.image.includes("pdf")? "pdf": "image"}/>
+                <Tags bgColor="red" onClick={(e) => {
                   e.stopPropagation()
                   if(window.confirm("Delete this receipt?")) props.onDelete(x)
-                }} text="delete"/>
+                }} text="delete"/> */}
                 </Col>
                 </Row>
                 </ListGroup.Item>
@@ -70,17 +86,17 @@ function Transaction(props) {
             }
             
             </ListGroup>
-          </Card>
-          </div>
-          )
-        }) :  <>
-              <p>No data available</p>
-              </>
+            </Card>
+            </div>
+            )
+          }) :  <>
+          <p>No data available</p>
+          </>
+        }
+        <br/>
+        </Container>
+        </div>
+        )
       }
-      <br/>
-      </Container>
-      </div>
-      )
-    }
-    
-    export default Transaction;
+      
+      export default Transaction;

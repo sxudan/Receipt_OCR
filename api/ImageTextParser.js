@@ -73,6 +73,8 @@ class ImageTextParser {
 
     #extractPrice() { // Net Pay: $1,200.00
         const str = (this.imageRawText.match(this.regexPatterns.netpay) || [])[0]
+        const lines = this.imageRawText.split("\n")
+        var success = true
         var obj = {amount: 0, currency: "", tax: 0}
         if(str) {
             obj = this.#extractcurrency_amount(str)
@@ -80,12 +82,16 @@ class ImageTextParser {
             // const totalStrings = (this.imageRawText.match(this.regexPatterns.total) ?? [])[0]
             var totalStrings = null
             var eft = null
-            const lines = this.imageRawText.split("\n")
-            lines.forEach((line) => {
+            for(let key in lines) {
+                const line = lines[key]
                 if((line.match(this.regexPatterns.total) || []).length > 0 && (line.match(/(tax)|(gst)/gi) || []).length == 0) {
                     totalStrings = line
+                    success = true
+                    break
                 } else if((line.match(/(eft)/gi) || []).length > 0) {
                     eft = line
+                    success = true
+                    break
                 } else if((line.match(this.regexPatterns.totalOnly) || []).length > 0 && (line.match(/(tax)|(gst)/gi) || []).length == 0) {
                     const amt = (line.match(this.regexPatterns.numberOnly) || [])
                     if(amt.length == 1) {
@@ -94,15 +100,22 @@ class ImageTextParser {
                         obj.tax = parseFloat(amt[0])
                         obj.amount = parseFloat(amt[1])
                     }
+                    success = true
+                    break
+                } else {
+                    success = false
                 }
-            }) 
+            }
+            // lines.forEach((line) => {
+               
+            // }) 
             if(totalStrings) {
                 obj = this.#extractcurrency_amount(totalStrings)
             } else if (eft) {
                 obj = this.#extractcurrency_amount(eft)
             }
         }
-        return {'ocr_currency': obj.currency, 'ocr_amount': obj.amount, 'ocr_tax': obj.tax}
+        return {'ocr_currency': obj.currency, 'ocr_amount': obj.amount, 'ocr_tax': obj.tax, 'ocr_lines': lines, 'ocr_success': success}
     }
 
     #extractcurrency_amount(s) {
