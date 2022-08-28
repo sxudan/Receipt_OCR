@@ -16,7 +16,7 @@ import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import Button from 'react-bootstrap/esm/Button';
 import { deleteObject, ref } from 'firebase/storage';
 import { storage } from './firebase';
-
+import Compressor from 'compressorjs'
 
 function App() {
   
@@ -162,7 +162,8 @@ function App() {
         var file = e.target.files[0]; 
         setFile(file)
         const c = window.confirm("Do you want to use OCR tool?")
-        if(c) {
+        
+        function sendForOCR(file) {
           fetchOCRInfo(file).then((data) => {
             if(!data.data.ocr_success) alert("Failed to capture text!")
             setIsTransactionAdder(true)
@@ -172,6 +173,33 @@ function App() {
             alert(err)
             setIsTransactionAdder(true)
           })
+        }
+
+        function compressAndOCRImage(image) {
+          console.log("compressing an image")
+          new Compressor(image, {
+            quality: 0.1, // 0.6 can also be used, but its not recommended to go below.
+            success: (compressedImage) => {
+              // compressedResult has the compressed file.
+              // Use the compressed file to upload the images to your server.  
+              console.log(compressedImage)      
+              sendForOCR(compressedImage)
+            },
+            error: (err) => {
+              alert(err)
+              sendForOCR(image)
+            }
+          })
+        }
+
+        if(c) {
+          console.log(file.type)
+          if(file.type.includes("image")) {
+            compressAndOCRImage(file)
+          } else {
+            console.log("not an image")
+            sendForOCR(file)
+          }        
         } else {
           setIsTransactionAdder(true)
         }
