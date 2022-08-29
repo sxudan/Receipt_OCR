@@ -180,7 +180,7 @@ function App() {
         function compressAndOCRImage(image) {
           console.log("compressing an image")
           new Compressor(image, {
-            quality: 0.4, // 0.6 can also be used, but its not recommended to go below.
+            quality: 0.1, // 0.6 can also be used, but its not recommended to go below.
             success: (compressedImage) => {
               // compressedResult has the compressed file.
               // Use the compressed file to upload the images to your server.  
@@ -217,6 +217,7 @@ function App() {
       console.log(user)
       setLoading(false)
       setProfile(user)
+      setIsTransactionAdder(false)
     }
     
     const logoutResponse = () => {
@@ -284,13 +285,15 @@ function App() {
       </Navbar.Brand>
       <Navbar.Toggle />
       <Navbar.Collapse className="justify-content-end">
+      {(Object.keys(profile).length == 0) ? <></> : 
+      <>
         <Navbar.Text>{profile.displayName}</Navbar.Text>
         <Navbar.Text><img className='nav_thumb' src={profile.photoURL} /></Navbar.Text>
-      <Navbar.Text>
-      {(Object.keys(profile).length == 0) ? <></> : <Button onClick={onGoogleLogout}>Logout</Button>
+        <Button onClick={onGoogleLogout}>Logout</Button>
+      </>
+      
       
       }
-        </Navbar.Text>
         </Navbar.Collapse>
         </Container>
         </Navbar>
