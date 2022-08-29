@@ -155,6 +155,8 @@ function App() {
       input.accept = "image/*,application/pdf"
       input.style = "display: none"
       document.body.appendChild(input);
+      setFile({})
+      setOcrData({})
 
 
       input.addEventListener("change", (e) => {
@@ -178,7 +180,7 @@ function App() {
         function compressAndOCRImage(image) {
           console.log("compressing an image")
           new Compressor(image, {
-            quality: 0.6, // 0.6 can also be used, but its not recommended to go below.
+            quality: 0.4, // 0.6 can also be used, but its not recommended to go below.
             success: (compressedImage) => {
               // compressedResult has the compressed file.
               // Use the compressed file to upload the images to your server.  

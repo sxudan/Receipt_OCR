@@ -36,7 +36,9 @@ function TransactionAdder(props) {
         
     })
     
-    useEffect(() => {
+   
+
+    useEffect(()=> {
         console.log(")))", props.ocrData)
         if(props.ocrData.data) {
             console.log("showing ocr data",props.ocrData)
@@ -52,20 +54,18 @@ function TransactionAdder(props) {
             }
             console.log(currentDate)
             setData({...data, amount: props.ocrData.data.ocr_amount, date: currentDate, merchant: props.ocrData.data.ocr_companyName})
+        } else {
+            setData({
+                category: "Others",
+                type: "expense",
+                amount: 0,
+                currency: "$",
+                date: getCurrentDate(),
+                image: "",
+                merchant: ""
+                
+            })
         }
-    }, [props.ocrData])
-
-    useEffect(()=> {
-        setData({
-            category: "Others",
-            type: "expense",
-            amount: 0,
-            currency: "$",
-            date: getCurrentDate(),
-            image: "",
-            merchant: ""
-            
-        })
     }, [])
     
     
