@@ -89,17 +89,17 @@ function App() {
         const data = snapshot.val()
         if(data) {
           for(var key in data.transactions) {
-            if(data.transactions[key].type == "income") {
-              amt += parseFloat(data.transactions[key].amount)
-              console.log(amt)
-            } else {
-              amt -= parseFloat(data.transactions[key].amount)
-              console.log(amt)
-            }
+            // if(data.transactions[key].type == "income") {
+            //   amt += parseFloat(data.transactions[key].amount)
+            //   console.log(amt)
+            // } else {
+            //   amt -= parseFloat(data.transactions[key].amount)
+            //   console.log(amt)
+            // }
             t.push({...data.transactions[key], id: key})
           }
         }
-        setBalance({...balance, amount: Math.round(amt * 100) / 100})
+        // setBalance({...balance, amount: Math.round(amt * 100) / 100})
         t.sort((a,b) => {
           var d1 = new Date(a.date), d2 = new Date(b.date)
           return d1 < d2
@@ -178,7 +178,7 @@ function App() {
         function compressAndOCRImage(image) {
           console.log("compressing an image")
           new Compressor(image, {
-            quality: 0.1, // 0.6 can also be used, but its not recommended to go below.
+            quality: 0.6, // 0.6 can also be used, but its not recommended to go below.
             success: (compressedImage) => {
               // compressedResult has the compressed file.
               // Use the compressed file to upload the images to your server.  
@@ -301,11 +301,11 @@ function App() {
             }
           </div> :  
           <div className='main-content'>
-          <Container>
+          {/* <Container>
           <Card>
           <Card.Body><h1>Total: { (balance.amount < 0) ? "-" + (balance.currency + Math.abs(balance.amount)) : (balance.currency + balance.amount)}</h1></Card.Body>
           </Card>
-          </Container>
+          </Container> */}
           <Row>
           { loading ? <LoadingBar /> : <Transaction data={transactions} onDelete={removeTransaction}/>}
           </Row>

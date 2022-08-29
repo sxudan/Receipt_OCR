@@ -1,15 +1,15 @@
 .popup {
     background-color: white;
     position: absolute;
-    height: 100vh;
+    height: 100%;
     width: 100%;
     left: 0;
     top: 0;
-    padding: 5%;
+    padding: 20px;
 }
 .content {
     position: relative;
-    width: 40%;
+    width: 60%;
     margin: auto;
 }
 

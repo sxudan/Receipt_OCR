@@ -54,14 +54,7 @@ function Transaction(props) {
             data[k].map((x,i) => {
               return (
                 <ListGroup.Item key={i}>
-                <Row>
-                <Col xxl={8} sm={9} xs={9}>
-                <Row><h6>{x.category}</h6></Row>
-                <Row><p>{x.date}</p></Row>
-                </Col>
-                <Col xxl={3} sm={3} xs={3} style={{color: x.type === "income" ? "green" : "red"}}><p>{x.currency + x.amount}</p></Col>
-                <Col xxl={1} sm={1} xs={12} >
-                <Row><Menu interrupt={interrupt} items={["View", "Delete"]} onSelected={(value,i) => {
+                  <Row><Menu interrupt={interrupt} items={["View", "Delete"]} onSelected={(value,i) => {
                   switch(i) {
                     case 0:
                     window.open(x.image)
@@ -71,15 +64,15 @@ function Transaction(props) {
                     break;
                   }
                 }}/></Row>
-                {/* <Tags onClick={() => {
-                  window.open(x.image)
-                }} color="white" bgColor="green" text={x.image.includes("pdf")? "pdf": "image"}/>
-                <Tags bgColor="red" onClick={(e) => {
-                  e.stopPropagation()
-                  if(window.confirm("Delete this receipt?")) props.onDelete(x)
-                }} text="delete"/> */}
-                </Col>
-                </Row>
+                  <Row>
+                    <p style={{color: x.type === "income" ? "green" : "red"}}>{x.currency + x.amount}</p>
+                  </Row>
+                  <Row>
+                    <p><b>{x.category} | {x.merchant}</b></p>
+                  </Row>
+                  <Row>
+                    <p>{x.date}</p>
+                  </Row>
                 </ListGroup.Item>
                 )
               })

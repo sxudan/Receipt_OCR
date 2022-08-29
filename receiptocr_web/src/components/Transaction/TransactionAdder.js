@@ -31,7 +31,8 @@ function TransactionAdder(props) {
         amount: 0,
         currency: "$",
         date: getCurrentDate(),
-        image: ""
+        image: "",
+        merchant: ""
         
     })
     
@@ -50,9 +51,22 @@ function TransactionAdder(props) {
                 currentDate = getCurrentDate()
             }
             console.log(currentDate)
-            setData({...data, amount: props.ocrData.data.ocr_amount, date: currentDate})
+            setData({...data, amount: props.ocrData.data.ocr_amount, date: currentDate, merchant: props.ocrData.data.ocr_companyName})
         }
     }, [props.ocrData])
+
+    useEffect(()=> {
+        setData({
+            category: "Others",
+            type: "expense",
+            amount: 0,
+            currency: "$",
+            date: getCurrentDate(),
+            image: "",
+            merchant: ""
+            
+        })
+    }, [])
     
     
     function getCurrentDate() {
@@ -98,108 +112,125 @@ function TransactionAdder(props) {
                 <div className="popup">
                 <div className="content">
                 <Row className="form-field">
-                <select name="Type" defaultValue={data.type} onChange={(e) => {
+                <p className="label">Merchant</p>
+                <input value={data.merchant} placeholder="Enter the receipt provider's name" onChange={(e) => {
+                    // amount = Math.abs(parseInt(e.target.value))\
                     setData(
                         (prevData) => {
                             return {
                                 ...prevData, 
-                                type: e.target.value,
+                                merchant: e.target.value
                             }
                         })
-                    }}>
-                    <option value="income">Income</option>
-                    <option value="expense">Expense</option>
-                    </select>
-                    
+                    }}/>
                     </Row>
-                    
                     <Row className="form-field">
-                    <select name="Category" defaultValue={data.category} onChange={(e) => {
-                        console.log(data)
+                    <p className="label">Type</p>
+                    <select name="Type" defaultValue={data.type} onChange={(e) => {
                         setData(
                             (prevData) => {
                                 return {
                                     ...prevData, 
-                                    category: e.target.value,
+                                    type: e.target.value,
                                 }
                             })
-                            
                         }}>
-                        <option value="Grocery">Grocery</option>
-                        <option value="Salary">Salary</option>
-                        <option value="Restaurants">Restaurants</option>
-                        <option value="Shopping">Shopping</option>
-                        <option value="Health">Health</option>
-                        <option value="Entertainment">Entertainment</option>
-                        <option value="Transfer">Transfer</option>
-                        <option value="Others">Others</option>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
                         </select>
                         
                         </Row>
                         
                         <Row className="form-field">
-                        <p className="label">Amount</p>
-                        <input type="number" value={data.amount} onChange={(e) => {
-                            // amount = Math.abs(parseInt(e.target.value))\
+                        <p className="label">Category</p>
+                        <select name="Category" defaultValue={data.category} onChange={(e) => {
+                            console.log(data)
                             setData(
                                 (prevData) => {
                                     return {
                                         ...prevData, 
-                                        amount: Math.abs(parseFloat(e.target.value)),
+                                        category: e.target.value,
                                     }
                                 })
-                        }}/>
-                        </Row>
-                        <Row className="form-field">
-                        <input type="date" value={data.date} onChange={(e) => {
-                            setData(
-                                (prevData) => {
-                                    return {
-                                        ...prevData, 
-                                        date: e.target.value,
-                                    }
-                                })
-                            }}/>
+                                
+                            }}>
+                            <option value="Grocery">Grocery</option>
+                            <option value="Salary">Salary</option>
+                            <option value="Restaurants">Restaurants</option>
+                            <option value="Shopping">Shopping</option>
+                            <option value="Health">Health</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Transfer">Transfer</option>
+                            <option value="Others">Others</option>
+                            </select>
+                            
                             </Row>
-                            <hr/>
                             
                             
-                            <Row>
-                            {
-                                !isLoading ? <Button onClick={() => {
-                                    setIsLoading(true)
-                                    handleUpload(props.profile.uid, props.file, (progress) => {
-                                        setProgress(progress)
-                                    }).then((url) => {
-                                        console.log(url)
-                                        setData(
-                                            (prevData) => {
-                                                return {
-                                                    ...prevData, 
-                                                    image: url,
-                                                }
-                                            })
-                            
-                                            console.log({...data,image: url})
-                                            updateDB(props.profile.uid, {...data,image: url, filename: props.file.name})
-                                            setIsLoading(false)
-                                            props.onClose()
-                                        }).catch(error => console.log(error))
+                            <Row className="form-field">
+                            <p className="label">Amount</p>
+                            <input type="number" value={data.amount} onChange={(e) => {
+                                // amount = Math.abs(parseInt(e.target.value))\
+                                setData(
+                                    (prevData) => {
+                                        return {
+                                            ...prevData, 
+                                            amount: Math.abs(parseFloat(e.target.value)),
+                                        }
+                                    })
+                                }}/>
+                                </Row>
+                                <Row className="form-field">
+                                <p className="label">Date</p>
+                                <input type="date" value={data.date} onChange={(e) => {
+                                    setData(
+                                        (prevData) => {
+                                            return {
+                                                ...prevData, 
+                                                date: e.target.value,
+                                            }
+                                        })
+                                    }}/>
+                                    </Row>
+                                    <hr/>
+                                    
+                                    
+                                    <Row>
+                                    {
+                                        !isLoading ? <Button onClick={() => {
+                                            setIsLoading(true)
+                                            handleUpload(props.profile.uid, props.file, (progress) => {
+                                                setProgress(progress)
+                                            }).then((url) => {
+                                                console.log(url)
+                                                setData(
+                                                    (prevData) => {
+                                                        return {
+                                                            ...prevData, 
+                                                            image: url,
+                                                        }
+                                                    })
+                                                    
+                                                    console.log({...data,image: url})
+                                                    updateDB(props.profile.uid, {...data,image: url, filename: props.file.name})
+                                                    setIsLoading(false)
+                                                    props.onClose()
+                                                }).catch(error => console.log(error))
+                                            }
+                                        }>Upload</Button> : <LoadingBar />
                                     }
-                                }>Upload</Button> : <LoadingBar />
-                            }
-                            </Row>
-                            <br/>
-                            <Row><Button variant="danger" onClick={() => {
-                                console.log(data)
-                                props.onClose()
-                            }}>Close</Button></Row>
-                            
-                            
-                            
-                            </div>
-                            </div>
-                            )
-                        }
-                        
-                        export default TransactionAdder;
+                                    </Row>
+                                    <br/>
+                                    <Row><Button variant="danger" onClick={() => {
+                                        console.log(data)
+                                        props.onClose()
+                                    }}>Close</Button></Row>
+                                    
+                                    
+                                    
+                                    </div>
+                                    </div>
+                                    )
+                                }
+                                
+                                export default TransactionAdder;
